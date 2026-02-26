@@ -7,3 +7,6 @@
 [submodule "auth"]
 	path = auth
 	url = https://github.com/AndrewMedvedev/auth-service.git
+[submodule "events-service"]
+	path = events-service
+	url = https://github.com/AndrewMedvedev/events.git
