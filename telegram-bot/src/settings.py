@@ -11,7 +11,7 @@ SQLALCHEMY_URL = f"sqlite+aiosqlite:///{BASE_DIR}/db.sqlite3"
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ENV_PATH)
 
-    agent_base_url: str = "http://localhost:8001"
+    chatbot_base_url: str = "http://localhost:8001"
     bot_token: str = "<TOKEN>"
 
 

@@ -1,0 +1,132 @@
+services:
+  embeddings-api:
+    build:
+      context: ./embeddings-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  chatbot:
+    build:
+      context: ./chatbot
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - EMBEDDINGS_BASE_URL=http://embeddings-api:8000
+    depends_on:
+      - embeddings-api
+
+  telegram-bot:
+    build:
+      context: ./telegram-bot
+      dockerfile: Dockerfile
+    environment:
+      - CHATBOT_BASE_URL=http://chatbot:8000
+      - BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    depends_on:
+      - chatbot
+    restart: unless-stopped
+
+  classifier:
+    build:
+      context: ./classifier
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8000"
+    restart: unless-stopped
+
+  rec-sys:
+    build:
+      context: ./rec-sys
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8000"
+    restart: unless-stopped
+
+  postgres-events:
+    image: postgres:16.9
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: events
+      POSTGRES_PASSWORD: events12345
+      POSTGRES_DB: events_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U events -d events_db" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  postgres-auth:
+    image: postgres:16.9
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: auth12345
+      POSTGRES_DB: auth_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U auth -d auth_db" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  redis-auth:
+    image: redis:6-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6679:6379"
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=postgres-auth
+      - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD=auth12345
+      - POSTGRES_USER=auth
+      - POSTGRES_DB=auth_db
+      - REDIS_HOST=redis-auth
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY}
+    ports:
+      - "8005:8000"
+    depends_on:
+      - postgres-auth
+      - redis-auth
+
+  events-service:
+    build:
+      context: ./events-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=postgres-events
+      - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD=events12345
+      - POSTGRES_USER=events
+      - POSTGRES_DB=events_db
+    ports:
+      - "8006:8080"
+    depends_on:
+      - postgres-events
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: unless-stopped

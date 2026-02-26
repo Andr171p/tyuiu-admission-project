@@ -1,0 +1,12 @@
+aiohttp~=3.13.3
+aiosqlite~=0.22.1
+chromadb~=1.5.1
+fastapi[all]~=0.133.1
+langchain~=1.2.10
+langchain-openai~=1.1.10
+langchain-text-splitters~=1.1.1
+langgraph-checkpoint-sqlite~=3.0.3
+markitdown[all]~=0.1.5
+mypy~=1.19.1
+ruff~=0.15.2
+tenacity~=9.1.4
