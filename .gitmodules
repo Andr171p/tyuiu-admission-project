@@ -1,0 +1,3 @@
+[submodule "embeddings-api"]
+	path = embeddings-api
+	url = https://github.com/Andr171p/embeddings-api.git
