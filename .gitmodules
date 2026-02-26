@@ -4,8 +4,8 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/DreminIlarion/frontend-project.git
-[submodule "auth"]
-	path = auth
+[submodule "auth-service"]
+	path = auth-service
 	url = https://github.com/AndrewMedvedev/auth-service.git
 [submodule "events-service"]
 	path = events-service
