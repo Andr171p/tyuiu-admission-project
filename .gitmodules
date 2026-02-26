@@ -1,3 +1,6 @@
 [submodule "embeddings-api"]
 	path = embeddings-api
 	url = https://github.com/Andr171p/embeddings-api.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/DreminIlarion/frontend-project.git
