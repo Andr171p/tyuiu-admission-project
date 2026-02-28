@@ -92,7 +92,7 @@ services:
 
   auth-service:
     build:
-      context: ./auth
+      context: ./auth-service
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
