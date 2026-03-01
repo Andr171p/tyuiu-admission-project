@@ -14,7 +14,7 @@ services:
     ports:
       - "8001:8000"
     environment:
-      - EMBEDDINGS_BASE_URL=http://embeddings-api:8000
+      - EMBEDDINGS_API_BASE_URL=http://embeddings-api:8000
       - YANDEX_CLOUD_FOLDER_ID=${YANDEX_CLOUD_FOLDER_ID}
       - YANDEX_CLOUD_API_KEY=${YANDEX_CLOUD_API_KEY}
     restart: unless-stopped

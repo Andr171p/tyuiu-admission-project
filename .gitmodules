@@ -10,3 +10,6 @@
 [submodule "auth-service"]
 	path = auth-service
 	url = https://github.com/AndrewMedvedev/auth-service.git
+[submodule "chatbot"]
+	path = chatbot
+	url = https://github.com/Andr171p/tiu-chatbot.git
