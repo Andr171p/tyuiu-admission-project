@@ -66,7 +66,7 @@ pipeline = Pipeline([
 ])
 
 
-class ApplicantPredict(BaseModel):
+class ApplicantData(BaseModel):
     """Запрос для предсказания вероятности поступления абитуриента"""
 
     year: int = Field(ge=2019, le=2024)
@@ -78,11 +78,11 @@ class ApplicantPredict(BaseModel):
     @field_validator("direction")
     def validate_direction(cls, direction: str) -> str:
         if direction not in DIRECTIONS:
-            raise ValidationError(f"Unsupported direction `{direction}`!")
+            raise ValueError(f"Unsupported direction `{direction}`!")
         return direction
 
 
-def applicants_to_df(applicants: list[ApplicantPredict]) -> pd.DataFrame:
+def applicants_to_df(applicants: list[ApplicantData]) -> pd.DataFrame:
     return pd.DataFrame([applicant.model_dump() for applicant in applicants])
 
 
@@ -111,7 +111,7 @@ async def get_directions() -> list[str]:
     response_model=list[float],
     summary="Получить вероятность поступления"
 )
-def predict(applicants: list[ApplicantPredict]) -> list[float]:
+def predict(applicants: list[ApplicantData]) -> list[float]:
     applicants_df = pd.DataFrame([applicant.model_dump() for applicant in applicants])
     probas = pipeline.predict_proba(applicants_df)
     return [float(proba[-1]) for proba in probas]
